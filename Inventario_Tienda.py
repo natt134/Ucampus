@@ -1,10 +1,10 @@
-# Estructura: "producto": [precio, stock]
+# Diccionario Estructura: "producto": [precio, stock]
 productos = {
     "arroz": [3500, 20],
     "leche": [4500, 15],
     "pan": [2500, 30],
     "papa": [1500, 50]
-}
+    }
 
 # BUCLE PRINCIPAL
 while True:

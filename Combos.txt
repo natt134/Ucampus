@@ -1,0 +1,3 @@
+Desayuno:  Leche+Pan  $6300
+Almuerzo:  Arroz+Pan  $4500 
+Cena:      Huevos+Aguacate+Chocolate  $5850

@@ -1,0 +1,9 @@
+arroz: 3500  Stock: 20
+leche: 4500  Stock: 15
+pan: 2500    Stock: 30
+papa: 1500   Stock: 50
+huevos: 500  Stock: 300
+Aguacate: 3500 Stock: 20
+Chocolate: 2500 Stock: 30
+
+45 3150 2250
