@@ -3,7 +3,10 @@ productos = {
     "arroz": [3500, 20],
     "leche": [4500, 15],
     "pan": [2500, 30],
-    "papa": [1500, 50]
+    "papa": [1500, 50],
+    "huevos": [500, 300],
+    "aguacate": [3500, 20],
+    "chocolate": [2500, 30]
     }
 
 # BUCLE PRINCIPAL
@@ -57,11 +60,13 @@ while True:
         print("\n--- COMBOS (CON 10% DESC) ---")
         desayuno = int((productos["leche"][0] + productos["pan"][0]) * 0.90)
         almuerzo = int((productos["arroz"][0] + productos["papa"][0]) * 0.90)
+        cena= int((productos["huevos"][0]+ productos["aguacate"][0]+ productos["chocolate"][0]) * 0.90)
         print(f"- Desayuno (Leche + Pan): ${desayuno}")
         print(f"- Almuerzo (Arroz + Papa): ${almuerzo}")
+        print(f"-Cena (Huevos + Aguacate + Chocolate): ${cena}")
 
     elif opcion == "5":
-        combo = input("¿Qué combo deseas comprar? (desayuno / almuerzo): ").lower().strip()
+        combo = input("¿Qué combo deseas comprar? (desayuno / almuerzo / cena): ").lower().strip()
 
         if combo == "desayuno":
             # Verificar stock de leche y pan
@@ -82,7 +87,11 @@ while True:
                 print(f"-> ¡Compra exitosa! Total a pagar: ${total}")
             else:
                 print("-> No hay stock suficiente de arroz o papa para este combo.")
-
+        
+        elif combo == "cena":
+            #Verificar stock de huevos, aguacate y chocolate
+            if productos["huevos"][1] >= 1 and productos ["aguacate"][1] >=1 and ["chocolate"][1]:
+                total= int(())
         else:
             print("-> El combo ingresado no existe.")
 
