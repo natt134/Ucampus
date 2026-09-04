@@ -6,7 +6,7 @@ productos = {
     "papa": [1500, 50],
     "huevos": [500, 300],
     "aguacate": [3500, 20],
-    "chocolate": [2500, 30]
+    "chocolate": [2500, 30],
     }
 
 # BUCLE PRINCIPAL
@@ -90,8 +90,15 @@ while True:
         
         elif combo == "cena":
             #Verificar stock de huevos, aguacate y chocolate
-            if productos["huevos"][1] >= 1 and productos ["aguacate"][1] >=1 and ["chocolate"][1]:
-                total= int(())
+            if productos["huevos"][1] >= 1 and productos ["aguacate"][1] >=1 and productos ["chocolate"][1] >=1 :
+                total= int((productos["huevos"][0] + productos["aguacate"][0] + productos["chocolate"][0]) * 0.90)
+                productos["huevos"][1] -=1
+                productos["aguacate"][1] -=1
+                productos["chocolate"][1] -=1
+                print(f"-> ¡Compra exitosa! Total a pagar: ${total}")
+            else:
+                print("-> No hay stock suficiente de huevos, aguacate o chocolate para este combo.")
+                
         else:
             print("-> El combo ingresado no existe.")
 
