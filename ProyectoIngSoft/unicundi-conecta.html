@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unicundi Conecta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#14332B;
+    --forest-2:#1D4436;
+    --moss:#2F6B4F;
+    --moss-light:#DCEAE2;
+    --gold:#C99A2E;
+    --gold-light:#F3E4BE;
+    --paper:#F5F4EE;
+    --card:#FFFFFF;
+    --line:#E4E1D6;
+    --ink:#1B211D;
+    --ink-soft:#5B655E;
+    --ink-faint:#8A9089;
+    --danger:#B5473A;
+    --radius-card: 14px;
+    --font-display:'Source Serif 4', serif;
+    --font-ui:'Inter', -apple-system, sans-serif;
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --paper:#10140F;
+      --card:#182019;
+      --line:#2A342C;
+      --ink:#EDEFE9;
+      --ink-soft:#AEB6AB;
+      --ink-faint:#7D877E;
+      --moss-light:#20362A;
+      --gold-light:#3A2F16;
+      --forest:#0C201A;
+      --forest-2:#132D24;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#10140F;
+    --card:#182019;
+    --line:#2A342C;
+    --ink:#EDEFE9;
+    --ink-soft:#AEB6AB;
+    --ink-faint:#7D877E;
+    --moss-light:#20362A;
+    --gold-light:#3A2F16;
+    --forest:#0C201A;
+    --forest-2:#132D24;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-ui);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+
+  /* ---------- header ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:20px;
+    padding:12px 24px;
+    background:var(--forest);
+    color:#fff;
+    border-bottom:1px solid var(--forest-2);
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:600;font-size:19px;white-space:nowrap;}
+  .brand .mark{
+    width:34px;height:34px;border-radius:9px;
+    background:var(--gold);color:var(--forest);
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px;flex-shrink:0;
+  }
+  .search{
+    flex:1;max-width:520px;
+    display:flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.16);
+    border-radius:10px;padding:9px 14px;
+    color:rgba(255,255,255,0.85);
+  }
+  .search input{
+    background:none;border:none;outline:none;color:#fff;
+    font-family:inherit;font-size:14px;width:100%;
+  }
+  .search input::placeholder{color:rgba(255,255,255,0.55);}
+  .topbar-right{margin-left:auto;display:flex;align-items:center;gap:18px;}
+  .bell{position:relative;font-size:18px;opacity:0.9;}
+  .bell .dot{
+    position:absolute;top:-5px;right:-7px;
+    background:var(--gold);color:var(--forest);
+    font-size:10px;font-weight:700;
+    border-radius:20px;padding:1px 5px;
+  }
+  .who{display:flex;align-items:center;gap:9px;}
+  .who .avatar{
+    width:34px;height:34px;border-radius:50%;
+    background:var(--gold-light);color:var(--forest);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:13px;flex-shrink:0;
+  }
+  .who .meta{line-height:1.2;}
+  .who .name{font-size:13.5px;font-weight:600;}
+  .who .role{font-size:11.5px;color:rgba(255,255,255,0.6);}
+
+  /* ---------- shell ---------- */
+  .shell{
+    max-width:1320px;margin:0 auto;
+    display:grid;grid-template-columns:230px minmax(0,1fr) 300px;
+    gap:22px;padding:22px 24px 80px;
+    align-items:start;
+  }
+  .sidebar, .rightpanel{position:sticky;top:76px;}
+
+  /* ---------- left nav ---------- */
+  .nav-card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius-card);padding:10px;
+  }
+  .nav-item{
+    display:flex;align-items:center;gap:11px;
+    padding:10px 12px;border-radius:9px;
+    font-size:14px;font-weight:500;color:var(--ink-soft);
+    margin-bottom:2px;border:none;background:none;width:100%;text-align:left;
+  }
+  .nav-item .ic{width:18px;text-align:center;}
+  .nav-item:hover{background:var(--moss-light);color:var(--ink);}
+  .nav-item.active{background:var(--forest);color:#fff;}
+  .nav-sep{height:1px;background:var(--line);margin:8px 4px;}
+
+  .callout{
+    margin-top:18px;background:var(--forest);color:#fff;
+    border-radius:var(--radius-card);padding:20px 18px;
+  }
+  .callout .glyph{font-size:26px;margin-bottom:10px;}
+  .callout h4{font-family:var(--font-display);font-size:16px;margin:0 0 6px;font-weight:600;}
+  .callout p{font-size:12.5px;line-height:1.5;color:rgba(255,255,255,0.72);margin:0;}
+
+  /* ---------- feed ---------- */
+  .feed-head{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius-card);padding:16px 18px;margin-bottom:16px;
+  }
+  .feed-head h1{
+    font-family:var(--font-display);font-size:21px;margin:0 0 3px;font-weight:600;
+  }
+  .feed-head p{margin:0;font-size:13px;color:var(--ink-soft);}
+
+  .composer{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius-card);padding:16px;margin-bottom:18px;
+  }
+  .composer-top{display:flex;gap:11px;}
+  .composer textarea{
+    flex:1;resize:none;border:none;outline:none;
+    font-family:inherit;font-size:14.5px;color:var(--ink);
+    background:none;min-height:40px;padding-top:8px;
+  }
+  .composer textarea::placeholder{color:var(--ink-faint);}
+  .composer-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-top:8px;padding-top:10px;border-top:1px solid var(--line);
+  }
+  .chip-row{display:flex;gap:6px;}
+  .chip{
+    font-size:12px;color:var(--ink-soft);background:var(--paper);
+    border:1px solid var(--line);padding:5px 10px;border-radius:20px;
+  }
+  .btn-publish{
+    background:var(--moss);color:#fff;border:none;
+    padding:8px 18px;border-radius:20px;font-size:13.5px;font-weight:600;
+  }
+  .btn-publish:disabled{opacity:0.4;cursor:default;}
+
+  .post{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius-card);margin-bottom:18px;overflow:hidden;
+  }
+  .post-head{display:flex;align-items:center;gap:11px;padding:14px 16px 10px;}
+  .post-head .avatar{
+    width:38px;height:38px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:13.5px;color:#fff;
+  }
+  .post-head .meta{line-height:1.3;flex:1;min-width:0;}
+  .post-head .name{font-size:14px;font-weight:600;}
+  .post-head .sub{font-size:12px;color:var(--ink-soft);}
+  .tag{
+    font-size:10.5px;font-weight:700;letter-spacing:.2px;
+    padding:3px 9px;border-radius:20px;color:#fff;flex-shrink:0;
+  }
+  .post-body{padding:2px 16px 12px;font-size:14.5px;line-height:1.55;}
+  .post-media{
+    margin:2px 16px 12px;border-radius:10px;
+    min-height:170px;display:flex;align-items:center;justify-content:center;
+    font-size:38px;color:rgba(255,255,255,0.9);
+  }
+  .event-box{
+    margin:0 16px 12px;border:1px solid var(--line);border-radius:10px;
+    display:flex;overflow:hidden;
+  }
+  .event-date{
+    width:64px;flex-shrink:0;background:var(--moss-light);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:var(--font-display);
+  }
+  .event-date .d{font-size:21px;font-weight:700;color:var(--forest);line-height:1;}
+  .event-date .m{font-size:10.5px;color:var(--forest);text-transform:uppercase;letter-spacing:.5px;}
+  .event-info{padding:10px 14px;flex:1;min-width:0;}
+  .event-info .place{font-size:12.5px;color:var(--ink-soft);margin-top:3px;}
+  .event-cta{
+    align-self:center;margin-right:14px;flex-shrink:0;
+    background:var(--forest);color:#fff;border:none;
+    padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;white-space:nowrap;
+  }
+  .event-cta.joined{background:var(--gold);color:var(--forest);}
+
+  .post-actions{
+    display:flex;align-items:center;gap:18px;
+    padding:6px 16px 4px;border-top:1px solid var(--line);
+    margin-top:4px;
+  }
+  .act{
+    display:flex;align-items:center;gap:6px;background:none;border:none;
+    color:var(--ink-soft);font-size:13px;padding:8px 2px;
+  }
+  .act.liked{color:var(--danger);font-weight:600;}
+  .act .icon{font-size:16px;}
+  .post-comments{padding:0 16px 14px;border-top:1px solid var(--line);}
+  .comment{display:flex;gap:9px;padding-top:10px;}
+  .comment .avatar{
+    width:26px;height:26px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:10.5px;font-weight:700;color:#fff;
+  }
+  .comment .bubble{
+    background:var(--paper);border-radius:10px;padding:7px 11px;font-size:13px;flex:1;
+  }
+  .comment .bubble b{font-size:12.5px;}
+  .comment-add{display:flex;gap:9px;align-items:center;padding-top:10px;}
+  .comment-add input{
+    flex:1;border:1px solid var(--line);background:var(--paper);
+    border-radius:20px;padding:8px 13px;font-size:13px;color:var(--ink);outline:none;
+  }
+  .comment-add button{
+    background:var(--forest2,var(--forest));color:#fff;border:none;
+    border-radius:16px;padding:7px 13px;font-size:12.5px;
+  }
+
+  /* ---------- right panel ---------- */
+  .panel{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius-card);padding:16px;margin-bottom:16px;
+  }
+  .panel-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}
+  .panel-head h3{font-family:var(--font-display);font-size:15.5px;margin:0;font-weight:600;}
+  .panel-head .link{font-size:12px;color:var(--moss);font-weight:600;}
+
+  .cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .cal-nav button{background:none;border:none;font-size:14px;color:var(--ink-soft);padding:2px 6px;}
+  .cal-title{font-size:13px;font-weight:600;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;}
+  .cal-grid span{font-size:10.5px;color:var(--ink-faint);padding-bottom:4px;}
+  .cal-grid .day{
+    font-size:12px;padding:6px 0;border-radius:7px;color:var(--ink-soft);position:relative;
+  }
+  .cal-grid .day.muted{color:var(--ink-faint);opacity:.45;}
+  .cal-grid .day.today{background:var(--gold);color:var(--forest);font-weight:700;}
+  .cal-grid .day.has-event::after{
+    content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+    width:4px;height:4px;border-radius:50%;background:var(--moss);
+  }
+  .cal-grid .day.today.has-event::after{background:var(--forest);}
+
+  .novedad{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line);}
+  .novedad:first-of-type{border-top:none;padding-top:0;}
+  .novedad .thumb{
+    width:44px;height:44px;border-radius:9px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;
+  }
+  .novedad .body{min-width:0;}
+  .novedad .title{font-size:13px;font-weight:600;line-height:1.3;}
+  .novedad .date{font-size:11px;color:var(--ink-faint);margin-top:2px;}
+
+  .foot-note{font-size:11.5px;color:var(--ink-faint);text-align:center;padding:6px 4px 0;line-height:1.5;}
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1020px){
+    .shell{grid-template-columns:210px minmax(0,1fr);}
+    .rightpanel{display:none;}
+  }
+  @media (max-width: 720px){
+    .shell{grid-template-columns:1fr;padding:14px 12px 60px;}
+    .sidebar{
+      position:sticky;top:60px;z-index:30;
+      display:flex;overflow-x:auto;gap:6px;padding:8px;
+      background:var(--card);border-radius:12px;border:1px solid var(--line);
+    }
+    .nav-card{display:flex;gap:4px;padding:0;border:none;background:none;}
+    .nav-item{flex-direction:column;gap:4px;font-size:10.5px;padding:8px 10px;white-space:nowrap;}
+    .nav-sep{display:none;}
+    .callout{display:none;}
+    .search{max-width:none;}
+    .brand span.txt{display:none;}
+    .who .meta{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand"><span class="mark">🎓</span><span class="txt">Unicundi Conecta</span></div>
+  <div class="search">
+    <span>🔎</span>
+    <input type="text" placeholder="Buscar eventos, publicaciones, personas…">
+  </div>
+  <div class="topbar-right">
+    <div class="bell">🔔<span class="dot">3</span></div>
+    <div class="who">
+      <div class="avatar">VR</div>
+      <div class="meta">
+        <div class="name">Valentina Rojas</div>
+        <div class="role">Estudiante · Ing. de Sistemas</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- ================= NAV ================= -->
+  <aside class="sidebar">
+    <nav class="nav-card" id="navCard">
+      <button class="nav-item active" data-filter="todo"><span class="ic">🏠</span>Inicio</button>
+      <button class="nav-item" data-filter="evento"><span class="ic">📅</span>Eventos</button>
+      <button class="nav-item" data-filter="actividad"><span class="ic">🤸</span>Actividades</button>
+      <button class="nav-item" data-filter="publicacion"><span class="ic">📰</span>Novedades</button>
+      <button class="nav-item" data-filter="convocatoria"><span class="ic">📣</span>Convocatorias</button>
+      <div class="nav-sep"></div>
+      <button class="nav-item" data-action="calendario"><span class="ic">🗓️</span>Calendario</button>
+      <button class="nav-item" data-action="intereses"><span class="ic">❤️</span>Mis intereses</button>
+      <button class="nav-item" data-action="perfil"><span class="ic">👤</span>Mi perfil</button>
+      <div class="nav-sep"></div>
+      <button class="nav-item" data-action="salir"><span class="ic">🚪</span>Cerrar sesión</button>
+    </nav>
+    <div class="callout">
+      <div class="glyph">📣</div>
+      <h4>Canal libre del campus</h4>
+      <p>Publica avisos, comparte lo que pasa en tu programa y entérate de primera mano. Esto lo escribe la comunidad, no la universidad.</p>
+    </div>
+  </aside>
+
+  <!-- ================= FEED ================= -->
+  <main>
+    <div class="feed-head">
+      <h1 id="feedTitle">Lo que pasa hoy en el campus</h1>
+      <p id="feedSub">Eventos, avisos y publicaciones de toda la comunidad, en orden de llegada.</p>
+    </div>
+
+    <div class="composer">
+      <div class="composer-top">
+        <div class="post-head" style="padding:0;">
+          <div class="avatar" style="background:#2F6B4F;">VR</div>
+        </div>
+        <textarea id="composerInput" placeholder="¿Qué está pasando en tu facultad, Valentina?" rows="1"></textarea>
+      </div>
+      <div class="composer-bar">
+        <div class="chip-row">
+          <span class="chip">📷 Foto</span>
+          <span class="chip">📍 Ubicación</span>
+        </div>
+        <button class="btn-publish" id="btnPublish" disabled>Publicar</button>
+      </div>
+    </div>
+
+    <div id="feedList"></div>
+  </main>
+
+  <!-- ================= RIGHT PANEL ================= -->
+  <aside class="rightpanel">
+    <div class="panel">
+      <div class="panel-head">
+        <h3>Calendario</h3>
+        <span class="link">Ver completo</span>
+      </div>
+      <div class="cal-nav">
+        <button id="calPrev">‹</button>
+        <span class="cal-title" id="calTitle">Septiembre 2026</span>
+        <button id="calNext">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h3>Novedades</h3>
+        <span class="link">Ver todas</span>
+      </div>
+      <div id="novedadesList"></div>
+    </div>
+
+    <p class="foot-note">Unicundi Conecta · Universidad de Cundinamarca<br>Espacio de comunicación libre entre estudiantes, docentes y bienestar.</p>
+  </aside>
+
+</div>
+
+<script>
+/* =========================================================
+   MODELO DE DATOS (en memoria, reflejando el esquema SQL:
+   usuarios, roles, categorias_evento, eventos, publicaciones,
+   comentarios). En un backend real esto vendría de esas tablas.
+   ========================================================= */
+
+const CATEGORIA_COLOR = {
+  'ACADÉMICO':'#2F6B4F',
+  'DEPORTIVO':'#B5473A',
+  'CULTURAL':'#8355B0',
+  'BIENESTAR':'#C99A2E',
+  'TALLER':'#2B7A8C',
+  'CONVOCATORIA':'#14332B',
+  'OTRO':'#6B6B6B'
+};
+const AVATAR_COLOR = ['#2F6B4F','#C99A2E','#8355B0','#2B7A8C','#B5473A','#14332B'];
+
+function colorFor(seed){
+  let h=0; for(const c of seed) h = (h*31 + c.charCodeAt(0)) % 997;
+  return AVATAR_COLOR[h % AVATAR_COLOR.length];
+}
+function initials(nombres, apellidos){
+  return (nombres[0]+ (apellidos ? apellidos[0]:'')).toUpperCase();
+}
+
+const usuarios = [
+  {id:1, nombres:'Valentina', apellidos:'Rojas', rol:'ESTUDIANTE', sub:'Ing. de Sistemas · Sede Fusagasugá'},
+  {id:2, nombres:'Bienestar', apellidos:'Universitario', rol:'BIENESTAR', sub:'Cuenta oficial · Bienestar UdeC'},
+  {id:3, nombres:'Camilo', apellidos:'Peña', rol:'DOCENTE', sub:'Docente · Facultad de Ingeniería'},
+  {id:4, nombres:'Laura', apellidos:'Méndez', rol:'ESTUDIANTE', sub:'Administración de Empresas'},
+  {id:5, nombres:'Deportes', apellidos:'UdeC', rol:'BIENESTAR', sub:'Cuenta oficial · Deportes'},
+  {id:6, nombres:'Andrés', apellidos:'Torres', rol:'ESTUDIANTE', sub:'Ing. de Sistemas · 6to semestre'}
+];
+function u(id){ return usuarios.find(x=>x.id===id); }
+
+let eventos = [
+  {id:1, categoria:'ACADÉMICO', nombre:'Semillero de Inteligencia Artificial', descripcion:'Segunda sesión abierta del semillero: entrenamos un modelo pequeño sobre datos del campus y discutimos casos de uso para bienestar estudiantil.', fecha:new Date(2026,8,18,10,0), espacio:'Auditorio principal, sede Fusagasugá', cupo:60, inscritos:41, creador:3, emoji:'🧠'},
+  {id:2, categoria:'DEPORTIVO', nombre:'Torneo interfacultades de fútbol', descripcion:'Fase de grupos del torneo. Ingeniería vs Ciencias Administrativas abre la jornada.', fecha:new Date(2026,8,20,14,0), espacio:'Cancha deportiva', cupo:200, inscritos:132, creador:5, emoji:'⚽'},
+  {id:3, categoria:'CONVOCATORIA', nombre:'Convocatoria de movilidad estudiantil 2026-2', descripcion:'Abierta la convocatoria para intercambios con universidades aliadas. Reunión informativa antes del cierre de inscripciones.', fecha:new Date(2026,8,22,15,0), espacio:'Sala de conferencias', cupo:80, inscritos:58, creador:2, emoji:'✈️'},
+  {id:4, categoria:'TALLER', nombre:'Taller de pintura mural', descripcion:'Nueva jornada del mural colaborativo del bloque de bienestar. Materiales incluidos, solo trae ganas de pintar.', fecha:new Date(2026,8,25,14,0), espacio:'Zona verde, bloque 4', cupo:25, inscritos:19, creador:2, emoji:'🎨'},
+  {id:5, categoria:'CULTURAL', nombre:'Noche de talentos UdeC', descripcion:'Música, monólogos y danza hechos por estudiantes. Inscribe tu acto en bienestar antes del viernes.', fecha:new Date(2026,8,27,18,0), espacio:'Auditorio principal', cupo:150, inscritos:97, creador:2, emoji:'🎤'}
+];
+
+let publicaciones = [
+  {id:1, usuario:4, contenido:'¿Alguien más entregando el proyecto de bases de datos hoy a media noche? Grupo de estudio en la biblioteca hasta las 9pm si alguien se quiere unir 📚', fecha:new Date(2026,8,16,8,10), likes:14, liked:false, imagen:null},
+  {id:2, usuario:6, contenido:'Se amplió el horario de la biblioteca central: ahora abre hasta las 10pm entre semana. Por fin voy a poder quedarme a terminar los parciales sin salir corriendo.', fecha:new Date(2026,8,15,19,40), likes:52, liked:false, imagen:'📖'},
+  {id:3, usuario:1, contenido:'Recomendado: el profe Peña volvió a subir las grabaciones de Estructuras de Datos al aula virtual. Sálvense antes del examen.', fecha:new Date(2026,8,15,12,5), likes:31, liked:false, imagen:null},
+  {id:4, usuario:2, contenido:'Este sábado hay jornada de voluntariado ambiental en la ronda del río. Llevamos guantes y bolsas, solo necesitamos manos. Certificado de horas de bienestar para quien participe.', fecha:new Date(2026,8,14,9,0), likes:76, liked:false, imagen:'🌱'}
+];
+
+let comentarios = [
+  {id:1, publicacion:1, usuario:6, contenido:'Yo me apunto, llevo los apuntes del último parcial', fecha:new Date(2026,8,16,8,30)},
+  {id:2, publicacion:1, usuario:4, contenido:'Perfecto, nos vemos en el segundo piso', fecha:new Date(2026,8,16,8,42)},
+  {id:3, publicacion:4, usuario:1, contenido:'¿A qué hora empieza exactamente?', fecha:new Date(2026,8,14,10,0)},
+  {id:4, publicacion:4, usuario:2, contenido:'8am en el punto de encuentro de bienestar, ¡te esperamos!', fecha:new Date(2026,8,14,10,15)}
+];
+
+let nextPubId = 100;
+let nextComId = 100;
+let currentFilter = 'todo';
+
+/* ---------- utilidades de fecha ---------- */
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MESES_CORTO = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+
+function tiempoRelativo(fecha){
+  const diffMs = Date.now() - fecha.getTime();
+  const min = Math.floor(diffMs/60000);
+  if(min < 1) return 'ahora';
+  if(min < 60) return `hace ${min} min`;
+  const h = Math.floor(min/60);
+  if(h < 24) return `hace ${h} h`;
+  const d = Math.floor(h/24);
+  if(d < 7) return `hace ${d} d`;
+  return `${fecha.getDate()} de ${MESES[fecha.getMonth()]}`;
+}
+
+/* =========================================================
+   RENDER: FEED (estilo scroll continuo, tipo Instagram)
+   ========================================================= */
+function itemsUnificados(){
+  const evs = eventos.map(e => ({tipo:'evento', fecha:e.fecha, data:e}));
+  const pubs = publicaciones.map(p => ({tipo:'publicacion', fecha:p.fecha, data:p}));
+  let items = [...evs, ...pubs];
+
+  if(currentFilter === 'evento'){
+    items = evs;
+  } else if(currentFilter === 'publicacion'){
+    items = pubs;
+  } else if(currentFilter === 'convocatoria'){
+    items = evs.filter(i => i.data.categoria === 'CONVOCATORIA');
+  } else if(currentFilter === 'actividad'){
+    items = evs.filter(i => ['DEPORTIVO','CULTURAL','TALLER'].includes(i.data.categoria));
+  }
+  return items.sort((a,b)=> b.fecha - a.fecha);
+}
+
+function renderPostHeader(nombreCompleto, sub, tagTexto, tagColor, avatarSeed){
+  return `
+    <div class="post-head">
+      <div class="avatar" style="background:${colorFor(avatarSeed)}">${initials(...nombreCompleto.split(' '))}</div>
+      <div class="meta">
+        <div class="name">${nombreCompleto}</div>
+        <div class="sub">${sub}</div>
+      </div>
+      ${tagTexto ? `<span class="tag" style="background:${tagColor}">${tagTexto}</span>` : ''}
+    </div>`;
+}
+
+function renderEvento(ev){
+  const autor = u(ev.creador);
+  const inscrito = ev.inscritoLocal === true;
+  return `
+  <article class="post" data-evento="${ev.id}">
+    ${renderPostHeader(autor.nombres+' '+autor.apellidos, tiempoRelativo(ev.fecha), ev.categoria, CATEGORIA_COLOR[ev.categoria], autor.nombres+autor.apellidos)}
+    <div class="post-body">${ev.descripcion}</div>
+    <div class="post-media" style="background:linear-gradient(135deg, ${CATEGORIA_COLOR[ev.categoria]}, ${CATEGORIA_COLOR[ev.categoria]}cc)">${ev.emoji}</div>
+    <div class="event-box">
+      <div class="event-date"><span class="d">${ev.fecha.getDate()}</span><span class="m">${MESES_CORTO[ev.fecha.getMonth()]}</span></div>
+      <div class="event-info">
+        <div style="font-weight:600;font-size:13.5px;">${ev.nombre}</div>
+        <div class="place">📍 ${ev.espacio} · ${ev.inscritos + (inscrito?1:0)}/${ev.cupo} inscritos</div>
+      </div>
+      <button class="event-cta ${inscrito?'joined':''}" data-inscribir="${ev.id}">${inscrito ? '✓ Inscrito' : 'Inscribirme'}</button>
+    </div>
+    ${renderActions(ev)}
+  </article>`;
+}
+
+function renderPublicacion(p){
+  const autor = u(p.usuario);
+  const propios = comentarios.filter(c => c.publicacion === p.id);
+  return `
+  <article class="post" data-post="${p.id}">
+    ${renderPostHeader(autor.nombres+' '+autor.apellidos, autor.sub + ' · ' + tiempoRelativo(p.fecha), autor.rol==='BIENESTAR'?'OFICIAL':null, 'var(--gold)', autor.nombres+autor.apellidos)}
+    <div class="post-body">${p.contenido}</div>
+    ${p.imagen ? `<div class="post-media" style="background:linear-gradient(135deg, var(--moss), var(--forest))">${p.imagen}</div>` : ''}
+    ${renderActions(p)}
+    <div class="post-comments" ${propios.length===0 ? 'style="display:none" id="comments-'+p.id+'"' : 'id="comments-'+p.id+'"'}>
+      ${propios.map(c => renderComentario(c)).join('')}
+      <div class="comment-add">
+        <input type="text" placeholder="Escribe un comentario…" data-comment-input="${p.id}">
+        <button data-comment-send="${p.id}">Enviar</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderComentario(c){
+  const autor = u(c.usuario);
+  return `
+    <div class="comment">
+      <div class="avatar" style="background:${colorFor(autor.nombres+autor.apellidos)}">${initials(autor.nombres, autor.apellidos)}</div>
+      <div class="bubble"><b>${autor.nombres} ${autor.apellidos}</b><br>${c.contenido}</div>
+    </div>`;
+}
+
+function renderActions(item){
+  const isPub = item.hasOwnProperty('contenido');
+  const key = isPub ? `data-post="${item.id}"` : `data-evento="${item.id}"`;
+  const liked = isPub ? item.liked : !!item.likedLocal;
+  const likes = isPub ? item.likes : (item.likesBase||0) + (liked?1:0);
+  const ncoment = isPub ? comentarios.filter(c=>c.publicacion===item.id).length : null;
+  return `
+    <div class="post-actions">
+      <button class="act ${liked?'liked':''}" data-like ${key}><span class="icon">${liked?'♥':'♡'}</span>${likes}</button>
+      ${isPub ? `<button class="act" data-toggle-comments="${item.id}"><span class="icon">💬</span>${ncoment}</button>` : ''}
+      <button class="act"><span class="icon">↗</span>Compartir</button>
+    </div>`;
+}
+
+function renderFeed(){
+  const list = itemsUnificados();
+  const el = document.getElementById('feedList');
+  if(list.length === 0){
+    el.innerHTML = `<div class="feed-head" style="text-align:center;color:var(--ink-soft);">No hay nada en esta categoría todavía. Sé el primero en publicar algo.</div>`;
+    return;
+  }
+  el.innerHTML = list.map(i => i.tipo==='evento' ? renderEvento(i.data) : renderPublicacion(i.data)).join('');
+}
+
+/* ---------- acciones del feed ---------- */
+document.getElementById('feedList').addEventListener('click', (e)=>{
+  const likeBtn = e.target.closest('[data-like]');
+  if(likeBtn){
+    if(likeBtn.hasAttribute('data-post')){
+      const p = publicaciones.find(x=>x.id==likeBtn.getAttribute('data-post'));
+      p.liked = !p.liked;
+      p.likes += p.liked ? 1 : -1;
+    } else {
+      const ev = eventos.find(x=>x.id==likeBtn.getAttribute('data-evento'));
+      ev.likesBase = ev.likesBase || 0;
+      ev.likedLocal = !ev.likedLocal;
+    }
+    renderFeed();
+    return;
+  }
+  const insBtn = e.target.closest('[data-inscribir]');
+  if(insBtn){
+    const ev = eventos.find(x=>x.id==insBtn.getAttribute('data-inscribir'));
+    ev.inscritoLocal = !ev.inscritoLocal;
+    renderFeed();
+    return;
+  }
+  const togBtn = e.target.closest('[data-toggle-comments]');
+  if(togBtn){
+    const id = togBtn.getAttribute('data-toggle-comments');
+    const box = document.getElementById('comments-'+id);
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    return;
+  }
+  const sendBtn = e.target.closest('[data-comment-send]');
+  if(sendBtn){
+    const id = Number(sendBtn.getAttribute('data-comment-send'));
+    const input = document.querySelector(`[data-comment-input="${id}"]`);
+    const texto = input.value.trim();
+    if(!texto) return;
+    comentarios.push({id: nextComId++, publicacion:id, usuario:1, contenido:texto, fecha:new Date()});
+    renderFeed();
+    const box = document.getElementById('comments-'+id);
+    if(box) box.style.display = 'block';
+  }
+});
+
+/* ---------- composer ---------- */
+const composerInput = document.getElementById('composerInput');
+const btnPublish = document.getElementById('btnPublish');
+composerInput.addEventListener('input', ()=>{
+  btnPublish.disabled = composerInput.value.trim().length === 0;
+  composerInput.style.height = 'auto';
+  composerInput.style.height = composerInput.scrollHeight + 'px';
+});
+btnPublish.addEventListener('click', ()=>{
+  const texto = composerInput.value.trim();
+  if(!texto) return;
+  publicaciones.unshift({id: nextPubId++, usuario:1, contenido:texto, fecha:new Date(), likes:0, liked:false, imagen:null});
+  composerInput.value = '';
+  btnPublish.disabled = true;
+  composerInput.style.height = 'auto';
+  if(currentFilter === 'evento' || currentFilter === 'convocatoria' || currentFilter === 'actividad'){
+    currentFilter = 'todo';
+    document.querySelectorAll('.nav-item[data-filter]').forEach(n=>n.classList.remove('active'));
+    document.querySelector('.nav-item[data-filter="todo"]').classList.add('active');
+    document.getElementById('feedTitle').textContent = 'Lo que pasa hoy en el campus';
+    document.getElementById('feedSub').textContent = 'Eventos, avisos y publicaciones de toda la comunidad, en orden de llegada.';
+  }
+  renderFeed();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+/* ---------- navegación ---------- */
+const FILTER_LABELS = {
+  todo:['Lo que pasa hoy en el campus','Eventos, avisos y publicaciones de toda la comunidad, en orden de llegada.'],
+  evento:['Eventos del campus','Todo lo programado por facultades, docentes y bienestar.'],
+  actividad:['Actividades','Deporte, cultura y talleres abiertos para toda la comunidad.'],
+  publicacion:['Novedades','Lo que la comunidad está contando ahora mismo.'],
+  convocatoria:['Convocatorias','Oportunidades académicas y de movilidad, abiertas para inscribirte.']
+};
+document.querySelectorAll('.nav-item[data-filter]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav-item[data-filter]').forEach(n=>n.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.getAttribute('data-filter');
+    const [t,s] = FILTER_LABELS[currentFilter];
+    document.getElementById('feedTitle').textContent = t;
+    document.getElementById('feedSub').textContent = s;
+    renderFeed();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+document.querySelectorAll('.nav-item[data-action]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const action = btn.getAttribute('data-action');
+    if(action === 'calendario'){
+      document.querySelector('.rightpanel')?.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  });
+});
+
+/* =========================================================
+   CALENDARIO (derivado de las fechas de "eventos")
+   ========================================================= */
+let calMonth = 8; // septiembre = índice 8
+let calYear = 2026;
+
+function eventDaysInMonth(year, month){
+  return new Set(eventos.filter(e => e.fecha.getFullYear()===year && e.fecha.getMonth()===month).map(e=>e.fecha.getDate()));
+}
+
+function renderCalendar(){
+  document.getElementById('calTitle').textContent = `${MESES[calMonth][0].toUpperCase()+MESES[calMonth].slice(1)} ${calYear}`;
+  const grid = document.getElementById('calGrid');
+  const dias = ['LUN','MAR','MIE','JUE','VIE','SAB','DOM'];
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=domingo
+  const offset = (firstDay + 6) % 7; // convertir a lunes=0
+  const totalDias = new Date(calYear, calMonth+1, 0).getDate();
+  const prevDias = new Date(calYear, calMonth, 0).getDate();
+  const marcados = eventDaysInMonth(calYear, calMonth);
+  const hoy = new Date();
+  const esMesActual = hoy.getFullYear()===calYear && hoy.getMonth()===calMonth;
+
+  let html = dias.map(d=>`<span>${d}</span>`).join('');
+  for(let i=offset; i>0; i--){
+    html += `<div class="day muted">${prevDias - i + 1}</div>`;
+  }
+  for(let d=1; d<=totalDias; d++){
+    const classes = ['day'];
+    if(esMesActual && hoy.getDate()===d) classes.push('today');
+    if(marcados.has(d)) classes.push('has-event');
+    html += `<div class="${classes.join(' ')}">${d}</div>`;
+  }
+  const restante = (7 - ((offset+totalDias) % 7)) % 7;
+  for(let d=1; d<=restante; d++){
+    html += `<div class="day muted">${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+document.getElementById('calPrev').addEventListener('click', ()=>{
+  calMonth--; if(calMonth<0){calMonth=11; calYear--;}
+  renderCalendar();
+});
+document.getElementById('calNext').addEventListener('click', ()=>{
+  calMonth++; if(calMonth>11){calMonth=0; calYear++;}
+  renderCalendar();
+});
+
+/* =========================================================
+   NOVEDADES (a partir de eventos tipo CONVOCATORIA / BIENESTAR)
+   ========================================================= */
+function renderNovedades(){
+  const destacados = eventos
+    .filter(e => ['CONVOCATORIA','BIENESTAR','ACADÉMICO'].includes(e.categoria))
+    .sort((a,b)=> b.fecha-a.fecha)
+    .slice(0,3);
+  const el = document.getElementById('novedadesList');
+  el.innerHTML = destacados.map(e => `
+    <div class="novedad">
+      <div class="thumb" style="background:${CATEGORIA_COLOR[e.categoria]}">${e.emoji}</div>
+      <div class="body">
+        <div class="title">${e.nombre}</div>
+        <div class="date">${e.fecha.getDate()} de ${MESES[e.fecha.getMonth()]}, ${e.fecha.getFullYear()}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ---------- init ---------- */
+renderFeed();
+renderCalendar();
+renderNovedades();
+</script>
+</body>
+</html>
